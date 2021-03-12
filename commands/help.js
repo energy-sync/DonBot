@@ -5,7 +5,7 @@ const guildManager = require("../guildManager");
 module.exports = {
     name: "help",
     description: "Shows the help list",
-    usage: "help",
+    usage: "help [command]",
     run: async (message, args) => {
         const guild = await guildManager.getGuild(message.guild);
 

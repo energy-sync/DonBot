@@ -34,8 +34,8 @@ exports.updateUser = async (user) => {
     if (g) {
         updatedUser = {
             id: user.id,
-            name: user.name,
-            prefix: user.prefix
+            tag: user.tage,
+            realName: user.realName
         };
 
         await mongoUsers.set(user.id, updatedUser);

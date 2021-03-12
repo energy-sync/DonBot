@@ -18,6 +18,9 @@ module.exports = {
                 author: {
                     name: "User information"
                 },
+                thumbnail: {
+                    url: message.mentions.members.first().user.displayAvatarURL()
+                },
                 fields: [
                     {
                         name: "Tag",

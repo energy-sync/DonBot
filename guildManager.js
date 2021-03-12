@@ -1,5 +1,5 @@
 const Keyv = require("keyv");
-const { mongoPath } = require("./config.json");
+const { mongoPath, defaultPrefix } = require("./config.json");
 
 let guilds = {};
 let mongoGuilds = new Keyv({uri: mongoPath, collection: "guilds"});
@@ -8,7 +8,10 @@ exports.addGuild = async (guild) => {
     const guildDefaults = {
         id: guild.id,
         name: guild.name,
-        prefix: "?"
+        prefix: defaultPrefix,
+        logChannel: undefined,
+        welcomeChannel: undefined,
+        welcomeMessage: undefined
     }
 
     if (!guilds[guild.id]) {
@@ -35,7 +38,10 @@ exports.updateGuild = async (guild) => {
         updatedGuild = {
             id: guild.id,
             name: guild.name,
-            prefix: guild.prefix
+            prefix: guild.prefix,
+            logChannel: guild.logChannel,
+            welcomeChannel: guild.welcomeChannel,
+            welcomeMessage: guild.welcomeMessage
         };
 
         await mongoGuilds.set(guild.id, updatedGuild);

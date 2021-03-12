@@ -14,8 +14,8 @@ exports.loadCommands = (c) => {
 }
 
 exports.run = (message, prefix) => {
-    let args = message.content.toLowerCase().slice(1).trim().split(/ +/g);
-    let cmd = args.shift().toLowerCase();
+    let args = message.content.slice(1).trim().split(/ +/g);
+    let cmd = args.shift();
     let command = client.commands.get(cmd);
     if (command) {
         try {
