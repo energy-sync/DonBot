@@ -8,7 +8,8 @@ exports.addUser = async (user) => {
     const userDefaults = {
         id: user.id,
         tag: user.tag,
-        realName: undefined
+        realName: undefined,
+        warns: []
     }
 
     if (!users[user.id]) {
@@ -34,8 +35,9 @@ exports.updateUser = async (user) => {
     if (g) {
         updatedUser = {
             id: user.id,
-            tag: user.tage,
-            realName: user.realName
+            tag: user.tag,
+            realName: user.realName,
+            warns: user.warns
         };
 
         await mongoUsers.set(user.id, updatedUser);

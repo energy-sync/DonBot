@@ -37,20 +37,22 @@ client.on("message", async (message) => {
 //logging
 
 client.on("channelCreate", async (channel) => {
-    let guild = await guildManager.getGuild(channel.guild);
-    if (guild.logChannel) {
-        let embed = new Discord.MessageEmbed({
-            author: {
-                name: "Channel created"
-            }
-        });
-        embed.addField("Name", channel.type === "text" ? `<#${channel.id}>` : channel.name);
-        if (channel.parent)
-            embed.addField("Category", channel.parent.name);
-        embed.addField("Type", channel.type);
-        client.channels.fetch(guild.logChannel).then(c => {
-            c.send(embed);
-        });
+    if (channel.guild) {
+        let guild = await guildManager.getGuild(channel.guild);
+        if (guild.logChannel) {
+            let embed = new Discord.MessageEmbed({
+                author: {
+                    name: "Channel created"
+                }
+            });
+            embed.addField("Name", channel.type === "text" ? `<#${channel.id}>` : channel.name);
+            if (channel.parent)
+                embed.addField("Category", channel.parent.name);
+            embed.addField("Type", channel.type);
+            client.channels.fetch(guild.logChannel).then(c => {
+                c.send(embed);
+            });
+        }
     }
 });
 

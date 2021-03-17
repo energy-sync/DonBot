@@ -7,8 +7,8 @@ module.exports = {
     run: async (message, args) => {
         if (args.length === 0 || message.mentions.channels.length === 0) return false;
 
-        if (!message.member.hasPermission("KICK_MEMBERS")) {
-            message.channel.send("Only moderators have access to this command");
+        if (!message.member.hasPermission("MANAGE_GUILD")) {
+            message.channel.send("You must have the \"Manage Server\" permission to use this command");
             return true;
         }
 
