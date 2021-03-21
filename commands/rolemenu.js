@@ -25,7 +25,7 @@ module.exports = {
             
             roleMenu.reactions.push({
                 role: role.id,
-                emoji: args[i + 1].replaceAll(" ", "")
+                emoji: args[i + 1].replace(/ /g, "")
             });
         }
         
