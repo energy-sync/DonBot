@@ -10,7 +10,7 @@ module.exports = {
             return true;
         }
 
-        let argsStr = args.join(" ").replaceAll(", ", ",");
+        let argsStr = args.join(" ").replace(/, /g, ",");
         args = argsStr.split(",");
         if (args.length < 3 || args.length % 2 === 0 || message.mentions.roles.length === 0) return false;
 
