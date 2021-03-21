@@ -181,6 +181,13 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
                 }});
             });
         }
+
+        //verify or unverify user
+        if (guild.verifiedRole) {
+            if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole))
+                newMember.roles.remove(guild.verifiedRole);
+            else newMember.roles.add(guild.verifiedRole);
+        }
     }
 });
 
@@ -201,6 +208,48 @@ client.on("messageDelete", async (message) => {
         client.channels.fetch(guild.logChannel).then(c => {
             c.send(embed);
         });
+    }
+
+    //deletes role menu if it is one
+    if (guild.roleMenus[message.id]) {
+        guild.roleMenus[message.id] = undefined;
+        guildManager.updateGuild(guild);
+    }
+});
+
+//role menus
+
+client.on("messageReactionAdd", async (reaction, user) => {
+    try {
+        if (!user.bot) {
+            let guild = await guildManager.getGuild(reaction.message.guild);
+            let roleMenu = guild.roleMenus[reaction.message.id];
+            if (guild.roleMenus[reaction.message.id]) {
+                let member = reaction.message.guild.members.resolve(user.id);
+                let role = roleMenu.reactions.find(r => (r.emoji === reaction.emoji || r.emoji === reaction.emoji.name));
+                if (role)
+                    member.roles.add(role.role);
+            }
+        }
+    } catch (error) {
+        console.log(`Error during messageReactionAdd event:\n${error.stack}`);
+    }
+});
+
+client.on("messageReactionRemove", async (reaction, user) => {
+    try {
+        if (!user.bot) {
+            let guild = await guildManager.getGuild(reaction.message.guild);
+            let roleMenu = guild.roleMenus[reaction.message.id];
+            if (guild.roleMenus[reaction.message.id]) {
+                let member = reaction.message.guild.members.resolve(user.id);
+                let role = roleMenu.reactions.find(r => (r.emoji === reaction.emoji || r.emoji === reaction.emoji.name));
+                if (role)
+                    member.roles.remove(role.role);
+            }
+        }
+    } catch (error) {
+        console.log(`Error during messageReactionRemove event:\n${error.stack}`);
     }
 });
 

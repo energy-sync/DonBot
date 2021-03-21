@@ -10,8 +10,10 @@ module.exports = {
             message.channel.send("You must be a moderator to use this command");
             return true;
         }
+
         if (message.mentions.members.length === 0 || args.length < 2)
             return false;
+
         let taggedUser = message.mentions.users.first();
         if (taggedUser) {
             let user = await userManager.getUser(taggedUser);

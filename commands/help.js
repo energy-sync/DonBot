@@ -47,7 +47,10 @@ module.exports = {
                             name: "Usage",
                             value: `${guild.prefix}${command.usage}`
                         }
-                    ]
+                    ],
+                    footer: {
+                        text: "<> = required  |  [] = optional"
+                    }
                 }});
             }
             else message.channel.send(`No command "${args[0]}" found`);

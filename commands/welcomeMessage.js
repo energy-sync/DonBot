@@ -2,8 +2,8 @@ const guildManager = require("../guildManager");
 
 module.exports = {
     name: "welcomemessage",
-    description: "Sets a welcome message for new users",
-    usage: "welcomemessage <message>",
+    description: "Sets a welcome message for new users. \"{user}\" is replaced with a mention at the user",
+    usage: "welcomemessage [message",
     run: async (message, args) => {
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             message.channel.send("You must have the \"Manage Server\" permission to use this command");
@@ -15,13 +15,13 @@ module.exports = {
             if (guild.welcomeMessage)
                 message.channel.send(`The welcome message is set to "${guild.welcomeMessage}"`);
             else message.channel.send("The welcome message is not set");
+            return true;
         }
-        else {
-            let welcomeMessage = args.join(" ");
-            guild.welcomeMessage = welcomeMessage;
-            guildManager.updateGuild(guild);
-            message.channel.send(`Set the welcome message to: "${welcomeMessage}"`);
-        }
+        
+        let welcomeMessage = args.join(" ");
+        guild.welcomeMessage = welcomeMessage;
+        guildManager.updateGuild(guild);
+        message.channel.send(`Set the welcome message to: "${welcomeMessage}"`);
         return true;
     }
 }

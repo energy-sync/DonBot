@@ -11,7 +11,10 @@ exports.addGuild = async (guild) => {
         prefix: defaultPrefix,
         logChannel: undefined,
         welcomeChannel: undefined,
-        welcomeMessage: undefined
+        welcomeMessage: undefined,
+        verifyRole: undefined,
+        muteRole: undefined,
+        roleMenus: []
     }
 
     if (!guilds[guild.id]) {
@@ -41,7 +44,10 @@ exports.updateGuild = async (guild) => {
             prefix: guild.prefix,
             logChannel: guild.logChannel,
             welcomeChannel: guild.welcomeChannel,
-            welcomeMessage: guild.welcomeMessage
+            welcomeMessage: guild.welcomeMessage,
+            verifiedRole: guild.verifyRole,
+            muteRole: guild.muteRole,
+            roleMenus: guild.roleMenus
         };
 
         await mongoGuilds.set(guild.id, updatedGuild);

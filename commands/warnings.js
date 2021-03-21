@@ -10,8 +10,10 @@ module.exports = {
             message.channel.send("You must be a moderator to use this command");
             return true;
         }
+
         if (message.mentions.users.length === 0)
             return false;
+            
         let user = await userManager.getUser(message.mentions.users.first());
         if (args[1] && (args[1].toLowerCase() === "clear" || args[1].toLowerCase() === "reset")) {
             user.warns = [];
