@@ -36,7 +36,7 @@ module.exports = {
                     },
                     {
                         name: "Warnings",
-                        value: user.warnings.length
+                        value: user.warns.length
                     }
                 ]
             }})
