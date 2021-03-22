@@ -14,14 +14,19 @@ module.exports = {
         if (message.mentions.members.length === 0 || args.length < 2)
             return false;
             
-        let taggedUser = message.mentions.users.first();
-        if (taggedUser) {
-            let user = await userManager.getUser(taggedUser);
+        let taggedMember = message.mentions.members.first();
+        if (taggedMember) {
+            if (taggedMember.hasPermission("KICK_MEMBERS")) {
+                message.channel.send("You cannot kick a moderator");
+                return true;
+            }
+
+            let user = await userManager.getUser(taggedMember.user);
             let guild = await guildManager.getGuild(message.guild);
             args.shift();
             let reason = args.join(" ");
-            await message.mentions.members.first().send(`You were kicked from ${message.guild.name} for the reason: **${reason}**`);
-            message.mentions.members.first().kick(reason);
+            await taggedMember.send(`You were kicked from ${message.guild.name} for the reason: **${reason}**`);
+            taggedMember.kick(reason);
             message.channel.send(`${user.tag} ${user.realName ? "(" + user.realName + ") " : ""}was kicked for the reason: **${reason}**`);
             if (guild.logChannel) {
                 message.guild.channels.resolve(guild.logChannel).send({embed: {
@@ -30,7 +35,7 @@ module.exports = {
                         name: `User kicked from ${guild.name}`
                     },
                     thumbnail: {
-                        url: taggedUser.displayAvatarURL()
+                        url: taggedMember.user.displayAvatarURL()
                     },
                     fields: [
                         {

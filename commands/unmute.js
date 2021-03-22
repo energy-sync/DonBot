@@ -20,18 +20,23 @@ module.exports = {
             return true;
         }
 
-        let taggedUser = message.mentions.members.first();
-        if (taggedUser) {
-            if (!taggedUser.roles.cache.some(r => r.id === guild.muteRole)) {
+        let taggedMember = message.mentions.members.first();
+        if (taggedMember) {
+            if (taggedMember.hasPermission("KICK_MEMBERS")) {
+                message.channel.send("You cannot mute/unmute a moderator");
+                return true;
+            }
+
+            if (!taggedMember.roles.cache.some(r => r.id === guild.muteRole)) {
                 message.channel.send(`${user.tag} is not muted`);
                 return true;
             }
 
-            let user = await userManager.getUser(taggedUser.user);
+            let user = await userManager.getUser(taggedMember.user);
             
-            taggedUser.roles.remove(guild.muteRole, "Unmuted");
+            taggedMember.roles.remove(guild.muteRole, "Unmuted");
             message.channel.send(`Unmuted ${user.tag}`);
-            taggedUser.send(`You were unmuted in ${message.guild.name}`);
+            taggedMember.send(`You were unmuted in ${message.guild.name}`);
             if (guild.logChannel) {
                 message.guild.channels.resolve(guild.logChannel).send({embed: {
                     color: 0xFFFF00,

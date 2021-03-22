@@ -33,6 +33,10 @@ module.exports = {
                     {
                         name: "Real name",
                         value: user.realName
+                    },
+                    {
+                        name: "Warnings",
+                        value: user.warnings.length
                     }
                 ]
             }})
