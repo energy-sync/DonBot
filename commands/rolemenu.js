@@ -15,6 +15,8 @@ module.exports = {
         if (args.length < 3 || args.length % 2 === 0 || message.mentions.roles.length === 0) return false;
 
         let roleMenu = {
+            messageID: undefined,
+            channelID: undefined,
             reactions: []
         }
 
@@ -22,21 +24,34 @@ module.exports = {
             if (!args[i].includes("<@&")) return false;
             let role = message.guild.roles.resolve(args[i].substring(args[i].indexOf("<@&") + 3, args[i].indexOf(">")));
             if (!role) return false;
+
+            let emoji = args[i + 1].replace(/ /g, "");
+            if (emoji.includes("<:")) {
+                emoji = emoji.substring(emoji.indexOf(":") + 1, emoji.indexOf(">"));
+                emoji = emoji.substring(emoji.indexOf(":") + 1);
+            }
             
             roleMenu.reactions.push({
                 role: role.id,
-                emoji: args[i + 1].replace(/ /g, "")
+                emoji: emoji
             });
         }
         
-        let msg = `**${args[0]}**\n\n`;
+        let msg = "";
         for (reaction of roleMenu.reactions) {
-            msg += `${reaction.emoji}  |  <@&${reaction.role}>\n`;
+            msg += `${isNaN(reaction.emoji) ? reaction.emoji : message.client.emojis.resolve(reaction.emoji)}  **|**  <@&${reaction.role}>\n`;
         }
-        message.channel.send(msg).then(async (m) => {
+        message.channel.send({embed: {
+            author: {
+                name: args[0]
+            },
+            description: msg
+        }}).then(async (m) => {
             //update in database
             let guild = await guildManager.getGuild(message.guild);
-            guild.roleMenus[m.id] = roleMenu;
+            roleMenu.messageID = m.id;
+            roleMenu.channelID = m.channel.id;
+            guild.roleMenus.push(roleMenu);
             guildManager.updateGuild(guild);
 
             //add reactions

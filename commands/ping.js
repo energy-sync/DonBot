@@ -4,5 +4,6 @@ module.exports = {
     usage: "ping",
     run: async (message, args) => {
         message.channel.send("Pong!");
+        return true;
     }
 }

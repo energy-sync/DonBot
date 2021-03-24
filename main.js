@@ -1,16 +1,27 @@
-const Discord = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const Keyv = require("keyv");
 const { token, mongoPath } = require("./config.json");
 const userManager = require("./userManager");
 const guildManager = require("./guildManager");
 const commandHandler = require("./commandHandler");
 
-const client = new Discord.Client();
+const client = new Client({
+    ws : {intents: Intents.ALL}
+});
 client.login(token);
 const keyv = new Keyv(mongoPath);
 
 client.on("ready", async () => {
     commandHandler.loadCommands(client);
+    //cache messages for role menus
+    for (guild of client.guilds.cache.array())
+        await guildManager.getGuild(guild);
+    for (guild in guildManager.guilds) {
+        for (roleMenu of guildManager.guilds[guild].roleMenus) {
+            let channel = client.channels.resolve(roleMenu.channelID);
+            await channel.messages.fetch(roleMenu.messageID);
+        }
+    }
     console.log(`Connected as ${client.user.username}`);
 });
 
@@ -223,10 +234,10 @@ client.on("messageReactionAdd", async (reaction, user) => {
     try {
         if (!user.bot) {
             let guild = await guildManager.getGuild(reaction.message.guild);
-            let roleMenu = guild.roleMenus[reaction.message.id];
-            if (guild.roleMenus[reaction.message.id]) {
+            let roleMenu = guild.roleMenus.find(r => r.messageID === reaction.message.id);
+            if (roleMenu) {
                 let member = reaction.message.guild.members.resolve(user.id);
-                let role = roleMenu.reactions.find(r => (r.emoji === reaction.emoji || r.emoji === reaction.emoji.name));
+                let role = roleMenu.reactions.find(r => (r.emoji === reaction.emoji.name || r.emoji === reaction.emoji.id));
                 if (role)
                     member.roles.add(role.role);
             }
@@ -240,10 +251,10 @@ client.on("messageReactionRemove", async (reaction, user) => {
     try {
         if (!user.bot) {
             let guild = await guildManager.getGuild(reaction.message.guild);
-            let roleMenu = guild.roleMenus[reaction.message.id];
-            if (guild.roleMenus[reaction.message.id]) {
+            let roleMenu = guild.roleMenus.find(r => r.messageID === reaction.message.id);
+            if (roleMenu) {
                 let member = reaction.message.guild.members.resolve(user.id);
-                let role = roleMenu.reactions.find(r => (r.emoji === reaction.emoji || r.emoji === reaction.emoji.name));
+                let role = roleMenu.reactions.find(r => (r.emoji === reaction.emoji.name || r.emoji === reaction.emoji.id));
                 if (role)
                     member.roles.remove(role.role);
             }
