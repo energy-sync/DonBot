@@ -1,4 +1,4 @@
-const { Client, Intents } = require("discord.js");
+const { Client, Intents, MessageEmbed } = require("discord.js");
 const Keyv = require("keyv");
 const { token, mongoPath } = require("./config.json");
 const userManager = require("./userManager");
@@ -51,7 +51,7 @@ client.on("channelCreate", async (channel) => {
     if (channel.guild) {
         let guild = await guildManager.getGuild(channel.guild);
         if (guild.logChannel) {
-            let embed = new Discord.MessageEmbed({
+            let embed = new MessageEmbed({
                 author: {
                     name: "Channel created"
                 }
@@ -70,7 +70,7 @@ client.on("channelCreate", async (channel) => {
 client.on("channelDelete", async (channel) => {
     let guild = await guildManager.getGuild(channel.guild);
     if (guild.logChannel) {
-        let embed = new Discord.MessageEmbed({
+        let embed = new MessageEmbed({
             author: {
                 name: "Channel deleted"
             }
@@ -211,7 +211,7 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
 client.on("messageDelete", async (message) => {
     let guild = await guildManager.getGuild(message.guild);
     if (guild.logChannel) {
-        let embed = new Discord.MessageEmbed({
+        let embed = new MessageEmbed({
             author: {
                 name: `Message by ${message.member.displayName} deleted`,
                 icon_url: message.author.displayAvatarURL()
