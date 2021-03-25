@@ -92,12 +92,14 @@ client.on("guildCreate", async (guild) => {
 client.on("guildMemberAdd", async (member) => {
     await userManager.getUser(member.user);
     let guild = await guildManager.getGuild(member.guild);
+
     //welcome message
     if (guild.welcomeChannel && guild.welcomeMessage) {
         client.channels.fetch(guild.welcomeChannel).then(c => {
             c.send(guild.welcomeMessage.replace("{user}", `<@!${member.user.id}>`));
         });
     }
+
     //log
     if (guild.logChannel) {
         let user = member.user;
@@ -126,6 +128,11 @@ client.on("guildMemberAdd", async (member) => {
             }});
         });
     }
+
+    console.log(guild);
+    //add verify role
+    if (guild.verifiedRole)
+        member.roles.add(guild.verifiedRole);
 });
 
 client.on("guildMemberRemove", async (member) => {
