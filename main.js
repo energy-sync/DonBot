@@ -129,7 +129,6 @@ client.on("guildMemberAdd", async (member) => {
         });
     }
 
-    console.log(guild);
     //add verify role
     if (guild.verifiedRole)
         member.roles.add(guild.verifiedRole);
