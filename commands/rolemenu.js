@@ -39,7 +39,7 @@ module.exports = {
         
         let msg = "";
         for (reaction of roleMenu.reactions) {
-            msg += `${isNaN(reaction.emoji) ? reaction.emoji : message.client.emojis.resolve(reaction.emoji)}  **|**  <@&${reaction.role}>\n`;
+            msg += `${isNaN(reaction.emoji) ? reaction.emoji : message.client.emojis.resolve(reaction.emoji)}  **-**  <@&${reaction.role}>\n\n`;
         }
         message.channel.send({embed: {
             author: {

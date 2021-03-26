@@ -18,8 +18,17 @@ client.on("ready", async () => {
         await guildManager.getGuild(guild);
     for (guild in guildManager.guilds) {
         for (roleMenu of guildManager.guilds[guild].roleMenus) {
-            let channel = client.channels.resolve(roleMenu.channelID);
-            await channel.messages.fetch(roleMenu.messageID);
+            if (roleMenu) {
+                let channel = client.channels.resolve(roleMenu.channelID);
+                try {
+                    await channel.messages.fetch(roleMenu.messageID);
+                } catch (error) {
+                    //remove role menu if the message no longer exists
+                    let g = guildManager.guilds[guild];
+                    g.roleMenus.splice(g.roleMenus.indexOf(roleMenu), 1);
+                    guildManager.updateGuild(g);
+                }
+            }
         }
     }
     console.log(`Connected as ${client.user.username}`);
@@ -228,8 +237,9 @@ client.on("messageDelete", async (message) => {
     }
 
     //deletes role menu if it is one
-    if (guild.roleMenus[message.id]) {
-        guild.roleMenus[message.id] = undefined;
+    let roleMenu = guild.roleMenus.find(r => r.messageID === message.id);
+    if (roleMenu) {
+        guild.roleMenus.splice(guild.roleMenus.indexOf(roleMenu), 1);
         guildManager.updateGuild(guild);
     }
 });
