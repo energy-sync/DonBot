@@ -1,9 +1,9 @@
 const guildManager = require("../guildManager");
 
 module.exports = {
-    name: "verifyrole",
-    description: "Sets the role given to users when they join the server. This role is taken away to give access to the server fully",
-    usage: "verify [@role]",
+    name: "timeoutrole",
+    description: "Sets the timeout role",
+    usage: "timeoutrole [@role]",
     run: async (message, args) => {
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             message.channel.send("You must have the \"Manage Server\" permission to use this command");
@@ -12,9 +12,9 @@ module.exports = {
 
         let guild = await guildManager.getGuild(message.guild);
         if (message.mentions.roles.length === 0 || args.length === 0) {
-            if (guild.verifiedRole)
-                message.channel.send(`The verify role is set to <@&${guild.verifiedRole}>`);
-            else message.channel.send("There is no verify role set");
+            if (guild.timeoutRole)
+                message.channel.send(`The timeout role is set to <@&${guild.timeoutRole}>`);
+            else message.channel.send("There is no timeout role set");
             return true
         }
 
@@ -24,9 +24,9 @@ module.exports = {
             return true;
         }
 
-        guild.verifiedRole = role.id;
+        guild.timeoutRole = role.id;
         await guildManager.updateGuild(guild);
-        message.channel.send(`Set the verify role to <@&${role.id}>`);
+        message.channel.send(`Set the timeout role to <@&${role.id}>`);
 
         return true;
     }

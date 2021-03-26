@@ -10,9 +10,11 @@ exports.addGuild = async (guild) => {
         name: guild.name,
         prefix: defaultPrefix,
         logChannel: undefined,
+        timeoutLogChannel: undefined,
         welcomeChannel: undefined,
         welcomeMessage: undefined,
         verifyRole: undefined,
+        timeoutRole: undefined,
         muteRole: undefined,
         roleMenus: []
     }
@@ -43,9 +45,11 @@ exports.updateGuild = async (guild) => {
             name: guild.name,
             prefix: guild.prefix,
             logChannel: guild.logChannel,
+            timeoutLogChannel: guild.timeoutLogChannel,
             welcomeChannel: guild.welcomeChannel,
             welcomeMessage: guild.welcomeMessage,
             verifiedRole: guild.verifyRole,
+            timeoutRole: guild.timeoutRole,
             muteRole: guild.muteRole,
             roleMenus: guild.roleMenus
         };
