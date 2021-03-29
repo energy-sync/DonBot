@@ -29,6 +29,15 @@ module.exports = {
 
             let user = await userManager.getUser(taggedMember.user);
             
+            //get all roles from members
+            let roles = [];
+            taggedMember.roles.cache.each(role => {
+                if (role.name !== "@everyone") {
+                    roles.push(role);
+                    taggedMember.roles.remove(role);
+                }
+            });
+
             taggedMember.roles.add(guild.timeoutRole);
             message.channel.send(`Sent ${user.tag} to timeout for ${args[1]} minutes`);
             if (guild.timeoutLogChannel) {
@@ -57,6 +66,8 @@ module.exports = {
             setTimeout(() => {
                 if (taggedMember.roles.cache.some(r => r.id === guild.timeoutRole)) {
                     taggedMember.roles.remove(guild.timeoutRole);
+                    for (role of roles)
+                        taggedMember.roles.add(role);
                     if (guild.timeoutLogChannel) {
                         message.guild.channels.resolve(guild.timeoutLogChannel).send({embed: {
                             color: 0xFFFF00,
