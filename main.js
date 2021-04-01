@@ -139,7 +139,6 @@ client.on("guildMemberAdd", async (member) => {
     }
 
     //add verify role
-    console.log(guild);
     if (guild.verifiedRole)
         member.roles.add(guild.verifiedRole);
 });
@@ -211,8 +210,10 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
 
         //verify or unverify user
         if (guild.verifiedRole) {
-            if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole))
+            if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole)) {
+                console.log("User has nickname and verify role, removing verify role")
                 newMember.roles.remove(guild.verifiedRole);
+            }
             else {
                 newMember.roles.cache.each(role => {
                     if (role.name !== "@everyone")
