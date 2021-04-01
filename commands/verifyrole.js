@@ -2,8 +2,8 @@ const guildManager = require("../guildManager");
 
 module.exports = {
     name: "verifyrole",
-    description: "Sets the role given to users when they join the server. This role is taken away to give access to the server fully",
-    usage: "verify [@role]",
+    description: "Sets the verify role",
+    usage: "verifyrole [@role]",
     run: async (message, args) => {
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             message.channel.send("You must have the \"Manage Server\" permission to use this command");

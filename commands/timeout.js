@@ -7,7 +7,7 @@ module.exports = {
     usage: "timeout <@user> <minutes>",
     run: async (message, args) => {
         if (!message.member.hasPermission("MANAGE_GUILD")) {
-            message.channel.send("You must be a moderator to use this command");
+            message.channel.send("You must be an administrator to use this command");
             return true;
         }
 

@@ -48,7 +48,7 @@ exports.updateGuild = async (guild) => {
             timeoutLogChannel: guild.timeoutLogChannel,
             welcomeChannel: guild.welcomeChannel,
             welcomeMessage: guild.welcomeMessage,
-            verifiedRole: guild.verifyRole,
+            verifiedRole: guild.verifiedRole,
             timeoutRole: guild.timeoutRole,
             muteRole: guild.muteRole,
             roleMenus: guild.roleMenus

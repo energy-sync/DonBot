@@ -139,6 +139,7 @@ client.on("guildMemberAdd", async (member) => {
     }
 
     //add verify role
+    console.log(guild);
     if (guild.verifiedRole)
         member.roles.add(guild.verifiedRole);
 });
@@ -212,7 +213,13 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
         if (guild.verifiedRole) {
             if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole))
                 newMember.roles.remove(guild.verifiedRole);
-            else newMember.roles.add(guild.verifiedRole);
+            else {
+                newMember.roles.cache.each(role => {
+                    if (role.name !== "@everyone")
+                        newMember.roles.remove(role);
+                });
+                newMember.roles.add(guild.verifiedRole);
+            }
         }
     }
 });
