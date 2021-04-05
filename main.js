@@ -210,10 +210,8 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
 
         //verify or unverify user
         if (guild.verifiedRole) {
-            if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole)) {
-                console.log("User has nickname and verify role, removing verify role")
+            if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole))
                 newMember.roles.remove(guild.verifiedRole);
-            }
             else {
                 newMember.roles.cache.each(role => {
                     if (role.name !== "@everyone")
