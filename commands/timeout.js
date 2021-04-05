@@ -22,7 +22,7 @@ module.exports = {
 
         let taggedMember = message.mentions.members.first();
         if (taggedMember) {
-            if (taggedMember.hasPermission("MANAGE_GUILD")) {
+            if (taggedMember.hasPermission("MANAGE_GUILD") || taggedMember.user.bot) {
                 message.channel.send("You cannot send an administrator to timeout");
                 return true;
             }
