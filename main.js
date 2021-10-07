@@ -176,48 +176,83 @@ client.on("guildMemberRemove", async (member) => {
 });
 
 client.on("guildMemberUpdate", async (oldMember, newMember) => {
-    if (oldMember.nickname !== newMember.nickname) {
-        let guild = await guildManager.getGuild(oldMember.guild);
-        let user = await userManager.getUser(oldMember.user);
-        user.realName = newMember.nickname;
-        userManager.updateUser(user);
-        if (guild.logChannel) {
-            client.channels.fetch(guild.logChannel).then(c => {
-                c.send({embed: {
-                    author: {
-                        name: "User changed their nickname"
-                    },
-                    thumbnail: {
-                        url: newMember.user.displayAvatarURL()
-                    },
-                    fields: [
-                        {
-                            name: "User",
-                            value: newMember.user.tag
-                        },
-                        {
-                            name: "Old nickname",
-                            value: oldMember.nickname ? oldMember.nickname : "None"
-                        },
-                        {
-                            name: "New nickname",
-                            value: newMember.nickname ? newMember.nickname : "None"
-                        }
-                    ]
-                }});
-            });
-        }
+    let guild = await guildManager.getGuild(oldMember.guild);
+    let user = await userManager.getUser(oldMember.user);
+    user.realName = newMember.nickname;
+    userManager.updateUser(user);
 
-        //verify or unverify user
-        if (guild.verifiedRole) {
-            if (newMember.nickname && newMember.roles.cache.some(r => r.id === guild.verifiedRole))
-                newMember.roles.remove(guild.verifiedRole);
-            else {
+    if (oldMember.nickname !== newMember.nickname) {
+        if (!newMember.nickname) {
+            //log
+            if (guild.logChannel) {
+                client.channels.fetch(guild.logChannel).then(c => {
+                    c.send({embed: {
+                        author: {
+                            name: "User removed their nickname"
+                        },
+                        thumbnail: {
+                            url: newMember.user.displayAvatarURL()
+                        },
+                        fields: [
+                            {
+                                name: "User",
+                                value: newMember.user.tag
+                            },
+                            {
+                                name: "Old nickname",
+                                value: oldMember.nickname ? oldMember.nickname : "None"
+                            },
+                            {
+                                name: "New nickname",
+                                value: newMember.nickname ? newMember.nickname : "None"
+                            }
+                        ]
+                    }});
+                });
+            }
+    
+            //unverify user
+            if (guild.verifiedRole) {
                 newMember.roles.cache.each(role => {
                     if (role.name !== "@everyone")
                         newMember.roles.remove(role);
                 });
                 newMember.roles.add(guild.verifiedRole);
+            }
+        }
+        else {
+            //log
+            if (guild.logChannel) {
+                client.channels.fetch(guild.logChannel).then(c => {
+                    c.send({embed: {
+                        author: {
+                            name: "User changed their nickname"
+                        },
+                        thumbnail: {
+                            url: newMember.user.displayAvatarURL()
+                        },
+                        fields: [
+                            {
+                                name: "User",
+                                value: newMember.user.tag
+                            },
+                            {
+                                name: "Old nickname",
+                                value: oldMember.nickname ? oldMember.nickname : "None"
+                            },
+                            {
+                                name: "New nickname",
+                                value: newMember.nickname ? newMember.nickname : "None"
+                            }
+                        ]
+                    }});
+                });
+            }
+
+            //verify
+            if (guild.verifiedRole) {
+                if (newMember.roles.cache.some(r => r.id === guild.verifiedRole))
+                    newMember.roles.remove(guild.verifiedRole);
             }
         }
     }
